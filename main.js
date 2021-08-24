@@ -1,4 +1,4 @@
-// variable
+// variables
       const operation = document.querySelector('.operation');
       const result = document.querySelector('.result');
       const clear = document.querySelector('.clear');
@@ -64,7 +64,7 @@
 
       // eval btn
       evaluate.addEventListener('click', function() {
-        if (operation.value === '') {
+        if (operation.value === '' && result.textContent === '') {
         result.textContent = 'not valid';
       }  else {
         result.textContent = eval(operation.value);
