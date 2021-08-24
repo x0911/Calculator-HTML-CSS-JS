@@ -64,9 +64,13 @@
 
       // eval btn
       evaluate.addEventListener('click', function() {
-        if (operation.value === '') {
+        if (operation.value === '' && result.textContent === '' ) {
         result.textContent = 'not valid';
-      }  else {
+      } else if (operation.value === '' && result.textContent !== '' ) {
+        result.textContent = result.textContent;
+        result.style.color = '#000';
+        result.style.fontWeight = '500';
+      } else {
         result.textContent = eval(operation.value);
         // result.textContent ? result.textContent : eval(operation.value);
         operation.value = '';
