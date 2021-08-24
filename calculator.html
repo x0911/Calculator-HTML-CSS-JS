@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      body {
+        background-color: crimson;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      .box {
+        background-color: cadetblue;
+        width: 300px;
+        height: 350px;
+      }
+      .screen {
+        padding: 10px;
+        width: 100%;
+        height: 80px;
+        background-color: rgb(248, 241, 241);
+      }
+      .operation {
+        width: 100%;
+        border: none;
+        height: 60%;
+        background-color: rgb(248, 241, 241);
+        outline: none;
+      }
+      .operation:focus {
+        border: none;
+        outline: none;
+      }
+      .body {
+        height: 270px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+      }
+      span {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(233, 227, 227);
+      }
+      span:nth-of-type(1),
+      span:nth-of-type(2),
+      span:nth-of-type(3),
+      span:nth-of-type(4),
+      span:nth-of-type(8),
+      span:nth-of-type(12) {
+        background-color: rgb(221, 220, 220);
+        color: rgb(42, 98, 202);
+      }
+
+      span:nth-of-type(16) {
+        background-color: rgb(42, 98, 202);
+        color: white;
+        grid-row: 4/6;
+        grid-column: 4/5;
+      }
+
+      /*
+      وزع ال grid ازاي
+      جاب العلامات ازاي
+      */
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <div class="screen">
+        <input class="operation" readonly value = ""></input>
+        <div class="result"></div>
+      </div>
+      <div class="body">
+        <span value='' class='clear'  >C</span>
+        <span value='/' class='operator'  >÷</span>
+        <span value='*' class='operator'  >X</span>
+        <span value='' class='del'  >Del</span>
+        <span value='7' class='num'  >7</span>
+        <span value='8' class='num'  >8</span>
+        <span value='9' class='num'  >9</span>
+        <span value='-' class='operator'  >-</span>
+        <span value='4' class='num'  >4</span>
+        <span value='5' class='num'  >5</span>
+        <span value='6' class='num'  >6</span>
+        <span value='+' class='operator'  >+</span>
+        <span value='1' class='num'  >1</span>
+        <span value='2' class='num'  >2</span>
+        <span value='3' class='num'  >3</span>
+        <span value='' class='eval'  >=</span>
+        <span value='' class='percent'  >%</span>
+        <span value='0' class='num'  >0</span>
+        <span value='.' class='operator dot'  >.</span>
+    </div>
+    </div>
+    <script>
+      // variable
+      const operation = document.querySelector('.operation');
+      const result = document.querySelector('.result');
+      const clear = document.querySelector('.clear');
+      const operators = document.querySelectorAll('.operator');
+      const nums = document.querySelectorAll('.num');
+      const evaluate = document.querySelector('.eval');
+      const del = document.querySelector('.del');
+      const percent = document.querySelector('.percent');
+      const realoperators= ['+','-','*','/','.'];
+      console.log(realoperators);
+
+      // clear btn
+      clear.addEventListener('click', function () {
+        operation.value = '';
+        result.textContent = '';
+      });
+
+      // del btn
+      del.addEventListener('click',function(){
+        operation.value = operation.value.slice(0, -1);
+        result.textContent =  eval(operation.value);
+      });
+
+      // avoid repeating operators and dot
+      for(const num of nums){
+        num.addEventListener('click', function () {
+          //  clear result after eval 
+          if (operation.value === "") result.textContent = '';
+          operation.value += num.getAttribute('value');
+          result.textContent =  eval(operation.value);
+          result.style.color = 'rgb(92, 92, 92,0.8)';
+        })
+      }; 
+      for(const operator of operators){
+        operator.addEventListener('click', function () {
+          // clear result after eval and pass result
+          if (operation.value === "") {
+            operation.value = result.textContent;
+            result.textContent = '';
+          }
+          // repeating 
+          if (operation.value[operation.value.length - 1] === operator.getAttribute('value')) {
+          operation.value += '';
+          } 
+          // move from operator to other
+          else if( 
+            realoperators.includes(operation.value[operation.value.length - 1]) &&
+            operation.value[operation.value.length - 1] !== operator.getAttribute('value')
+          ){
+            console.log('i am here');
+            operation.value = operation.value.slice(0, -1);
+            operation.value += operator.getAttribute('value');
+            // operation.value[operation.value.length - 1] = operator.getAttribute('value');
+          }
+          else {operation.value += operator.getAttribute('value');}
+      })};
+
+      // percent btn
+      percent.addEventListener('click', function () {
+        operation.value = `(${operation.value})/100`;
+        result.textContent =  eval(operation.value);
+      });
+
+      // eval btn
+      evaluate.addEventListener('click', function() {
+        if (operation.value === '') {
+        result.textContent = 'not valid';
+      }  else {
+        result.textContent = eval(operation.value);
+        // result.textContent ? result.textContent : eval(operation.value);
+        operation.value = '';
+        result.style.color = '#000';
+        result.style.fontWeight = '500';
+      }});
+
+      /* new 
+      slice(0, -1)
+      eval
+      operation.value.match(/^\d+/)
+      */
+
+      // some validation & evaluate result 
+      // we used read only attr
+      /*
+      operation.addEventListener('input', function calc() {
+        if ( (!operation.value.match(/^\d+/)) && (operation.value !== '') ) {
+        result.textContent = 'not valid';
+      }  else {
+        result.textContent =  eval(operation.value);
+        result.style.color = 'rgb(92, 92, 92,0.8)';
+      }}); 
+      */
+
+</script>
+  </body>
+</html>
