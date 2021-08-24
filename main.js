@@ -64,7 +64,7 @@
 
       // eval btn
       evaluate.addEventListener('click', function() {
-        if (operation.value === '' && result.textContent === '') {
+        if (operation.value === '') {
         result.textContent = 'not valid';
       }  else {
         result.textContent = eval(operation.value);
